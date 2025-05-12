@@ -1,0 +1,10 @@
+README.md
+apis/PetApi.h
+apis/StoreApi.h
+apis/UserApi.h
+models/ApiResponse.h
+models/Category.h
+models/Order.h
+models/Pet.h
+models/Tag.h
+models/User.h

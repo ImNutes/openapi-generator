@@ -1,0 +1,6 @@
+generatorName: cpp-nlohmann-cpr
+outputDir: samples/client/petstore/cpp-nlohmann-cpr
+inputSpec: https://raw.githubusercontent.com/OpenAPITools/openapi-generator/refs/heads/master/modules/openapi-generator/src/test/resources/3_0/petstore.yaml
+templateDir: modules/openapi-generator/src/main/resources/cpp-nlohmann-cpr
+additionalProperties:
+  hideGenerationTimestamp: "true"

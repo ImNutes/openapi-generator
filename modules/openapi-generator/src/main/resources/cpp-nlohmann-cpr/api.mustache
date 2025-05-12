@@ -1,0 +1,44 @@
+#pragma once
+
+
+class {{classname}}Api {
+public:
+    explicit {{classname}}Api(const std::string& baseUrl) : baseUrl{baseUrl} {}
+
+    {{#operations}}
+    {{#operation}}
+        // {{summary}}
+        // {{notes}}
+        {{{returnType}}} {{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) {
+            std::string url = baseUrl + "{{{path}}}";
+            {{#pathParams}}
+            url = std::regex_replace(url, std::regex("\\{\\{?{{baseName}}\\}\\}"), std::to_string({{paramName}}));
+            {{/pathParams}}
+            {{#hasQueryParams}}
+            std::string query;
+            {{#queryParams}}
+            query += "{{baseName}}=" + cpr::util::urlEncode({{paramName}}){{^-last}} + "&"{{/-last}};
+            {{#-last}}
+            url += "?" + query;
+            {{/-last}}
+            {{/queryParams}}
+            {{/hasQueryParams}}
+            auto response = cpr::{{httpMethod}}(cpr::Url{url});
+
+            {{#bodyParam}}
+            nlohmann::json j = {{paramName}};
+            {{/bodyParam}}
+
+            auto response = cpr::{{httpMethod}}(
+                cpr::Url{url},
+                {{#bodyParam}} cpr::Body{j.dump}, cpr::Header{{ {"Content-Type", "application/json"} }}, {{/bodyParam}}
+                cpr::Timeout{5000}
+            );
+            if(reponse.status_code != 200) { throw std::runtime_error("rip"); }
+            return nlohmann::json::parse(response.text).get<{{{returnType}}}>();
+        }
+    {{/operation}}
+    {{/operations}}
+private:
+    std::string baseUrl;
+}
